@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="./city.js"></script>
+    <script>
+        // const cityDatas = resDatas.data;
+        // console.log(cityDatas);
+        // // getCityById ，通过 id 获取城市数据中改 id 对应的信息。例如我们可以通过 440104 ，知道是荔湾区。
+        // // 1. 通过 id 获取城市数据中改 id 对应的信息 和之前的section7 一样
+        // function getCityById(id){
+        //     for(let i = 0;i<cityDatas.length -1  ;i++){
+        //         // console.log(i.value)
+        //         // console.log(i.label)
+        //         // console.log(i.children.value);
+        //         if(i.value == id){
+        //             return {value: id, label: i.label};
+        //         }
+        //         // 你想直接从 resDatas.data.children.value 中提取值，这是不正确的。因为 children 是一个数组，而不是一个对象，它没有直接的 value 属性。你需要先选择数组中的一个元素，然后再访问其 value 属性。
+        //         for(let j = 0;j<cityDatas[i].children.length -1  ;j++){
+        //             if(cityDatas[i].children[j].value == id){
+        //                 return {value: id, label: cityDatas[i].children[j].label} 
+        //             }
+        //             if(cityDatas[i].children[j].children && cityDatas[i].children[j].children.length-1 >0 ){
+        //                 for(let z = 0;z<cityDatas[i].children[j].children.length;z++){//先判断length是否存在
+        //                     if(cityDatas[i].children[j].children[z].value == id){
+        //                         return {value: id, label: cityDatas[i].children[j].children[z].label}
+        //                     }
+        //                 }
+        //             }
+        //         }
+                
+        //     }
+        //     return "not exist";
+        // }
+        
+        //recusion
+        const cityDatas = resDatas.data;
+        console.log(cityDatas);
+        function getCityById(id, nodes) {
+            const result = {};
+            function innerGetCityById(id, nodes){
+                if(!nodes){
+                    return;
+                }
+                // nodes.forEach(node => {
+                //     if (node.value === id) {
+                //         result.value = id;
+                //         result.label = node.label;
+                //     } else {
+                //         innerGetCityById(id, node.children);
+                //     }
+                // });
+                for (let node of nodes) {
+                // console.log(node);
+                    if (node.value === id) {
+                        result.value = id;
+                        result.label = node.label;
+                    }
+                    else{
+                        innerGetCityById(id, node.children);
+                    }
+                }
+            }
+            innerGetCityById(id, nodes)
+            return result;
+        }
+        const result = getCityById(440104, cityDatas);
+        console.log(result);
+        const result2 = getCityById(440100, cityDatas);
+        console.log(result2);
+
+        // 2. 通过 id  id 获取城市数据中改 id 对应的信息以及父级信息
+        // const cityDatas = resDatas.data;
+        // console.log(cityDatas);
+        function getCityWithParentById(id, nodes, parent ,grandParent) {
+            const result = [];
+            function innerGetCityById(id, nodes, parent ,grandParent){
+                if(!nodes){
+                    return;
+                }
+                for (let node of nodes) {
+                    if (node.value === id) {
+                        result.unshift({ value: id, label: node.label })
+                        if(parent){
+                            result.unshift({ value: parent.value, label: parent.label})
+                        }
+                        if(grandParent){
+                            result.unshift({ value: grandParent.value, label: grandParent.label})
+                        }
+                    }
+                    else{
+                        innerGetCityById(id, node.children, node, parent);                    
+                    }
+                }
+            }
+            innerGetCityById(id, nodes, parent,grandParent);
+            return result;
+        }
+        const result3 = getCityWithParentById(440104,cityDatas,null,null);
+        console.log(result3);
+        const result4 = getCityWithParentById(150100,cityDatas);
+        console.log(result4);
+        // [{value: 440000, label: "广东省"},{value: 440100, label: "广州市"}，{value: 440104, label: "荔湾区"}]
+        const result5 = getCityWithParentById(320205,cityDatas);
+        console.log(result5);
+        
+    </script>
+</body>
+</html>
+
