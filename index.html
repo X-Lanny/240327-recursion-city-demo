@@ -75,16 +75,38 @@
         const result2 = getCityById(440100, cityDatas);
         console.log(result2);
 
+        //recusion 2
+        // function getCityById(id, nodes = cityDatas) {
+        //     for (let node of nodes) {
+        //         if (node.value == id) {
+        //             return { value: id, label: node.label };
+        //         }
+        //         if (node.children && node.children.length > 0) {
+        //             let result = getCityById(id, node.children);
+        //             if (result) {
+        //                 return result;
+        //             }
+        //         }
+        //     }
+        //     return "not exist";
+        // }
+
+        // const result6 = getCityById(120101);
+        // console.log(result6); // {value: 120101, label: "和平区"}
+
+        // const result4 = getCityById(120100);
+        // console.log(result4); // {value: 120100, label: "天津城区"}
+
         // 2. 通过 id  id 获取城市数据中改 id 对应的信息以及父级信息
         // const cityDatas = resDatas.data;
         // console.log(cityDatas);
-        function getCityWithParentById(id, nodes, parent ,grandParent) {
+        function getCityWithParentById(id, nodes, parent ,grandParent){
             const result = [];
             function innerGetCityById(id, nodes, parent ,grandParent){
                 if(!nodes){
                     return;
                 }
-                for (let node of nodes) {
+                for (let node of nodes){
                     if (node.value === id) {
                         result.unshift({ value: id, label: node.label })
                         if(parent){
